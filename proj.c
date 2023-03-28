@@ -110,7 +110,7 @@ start:
             }
             else if (choice == 0)
             {
-                goto start;
+                goto menu;
             }
             
         }
