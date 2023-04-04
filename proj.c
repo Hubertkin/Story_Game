@@ -61,18 +61,18 @@ start:
                 else
                 {
                     printf("Welcome once again %s\nYour profile has been successfully created\n", userName);
-                    if (strlen(userName) > 9)
+                    /**if (strlen(userName) > 9)
                         fprintf(userProfile, "%d\n", strlen(userName) + 2);
                     else if(strlen(userName) > 99)
                         fprintf(userProfile, "%d\n", strlen(userName) + 3);
                     else
-                        fprintf(userProfile, "%d\n", strlen(userName) + 1);
+                        fprintf(userProfile, "%d\n", strlen(userName) + 1);*/
                     fprintf(userProfile, "%s\n", userName);
                     fprintf(players, "%s\n", userName);
                     fclose(players);
                     fclose(userProfile);
                     lineNum();
-                    // storyGame(userName);
+                    storyGame(userName);
                     goto start;
                 }
             }
@@ -104,7 +104,7 @@ start:
             int work = 0;
             choice = -1;
             printf("\nOr type \"0\" to go back to the main page\n");
-            printf("0 - MENU\n");
+            printf("\n0 - MENU\n\n");
             work = scanf("%d", &choice);
             if (choice != 0 && choice != -1)
             {
@@ -113,12 +113,14 @@ start:
                 fileName[strlen(fileName) - 1] = '\0';
                 strcat(fileName, ".txt");
                 FILE *login = fopen(fileName, "r");
-                char buffer[20];
+                char buffer[20] = "";
                 // printf("%s2\n", fileName);
                 // printf("%d3\n", ferror(login));
                 fseek(login, 0, SEEK_SET);
                 fgets(buffer, 20, login);
-                printf("%s4\n", buffer);
+                printf("\n%s\n", buffer);
+                buffer[strlen(buffer) - 1] = '\0';
+                storyGame(buffer);
                 // printf("%s5\n", conCat[choice - 1]);
             }
             else if (choice == 0)
