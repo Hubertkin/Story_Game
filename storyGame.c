@@ -1,39 +1,32 @@
 #include "main.h"
 
-void continueGame(FILE *, char *);
+int continueGame(FILE *, char *);
 int saveProgress(char *);
 int stringPrint(char *, FILE *story, char *);
 void progressLoad(char *);
-void contOrQuit();
+int contOrQuit();
+void gameReset(char *);
 struct gamePlayer
 {
     char name[100];
     char playerFile[100];
     char mode[100];
     long int checkpoint;
-    int nameLength;
 } player;
 
-int cursor = 0;
-
-void storyGame(char *userName)
+int storyGame(char *userName)
 {
-    //char userName[100] = "Gido";
+reset:
     strcpy(player.mode, "new");
     player.checkpoint = 0;
     progressLoad(userName);
-    // printf("%d\n", player.nameLength);
-    // printf("%s\n", player.name);
     int alt0 = 0;
     int alt1 = 2885;
     int alt2 = 3829;
     int alt3 = 5185;
     int choice;
+    int returnValue = 0;
     FILE *story = fopen("story.txt", "r");
-    //printf("num = %d\n", player.nameLength);
-    printf("str1 = %s\n", player.name);
-    printf("str2 = %s\n", player.mode);
-    printf("num2 = %d\n", player.checkpoint);
 
     if (!strcmp(player.mode, "md1"))
     {
@@ -82,14 +75,11 @@ void storyGame(char *userName)
         alt3 = player.checkpoint;
         goto alt4;
     }
-
 md1:
     strcpy(player.mode, "md1");
-    continueGame(story, userName);
-    printf("num = %d\n", player.nameLength);
-    printf("str1 = %s\n", player.name);
-    printf("str2 = %s\n", player.mode);
-    printf("num2 = %d\n", player.checkpoint);
+    returnValue = continueGame(story, userName);
+    if (returnValue == 1)
+        return 1;
 bk1:
     printf("\n\tWhat do You Do?\n\n");
     printf("\t  1. - Pursue the Case\n");
@@ -99,11 +89,9 @@ bk1:
     {
     md2:
         strcpy(player.mode, "md2");
-        continueGame(story, userName);
-        printf("num = %d\n", player.nameLength);
-        printf("str1 = %s\n", player.name);
-        printf("str2 = %s\n", player.mode);
-        printf("num2 = %d\n", player.checkpoint);
+        returnValue = continueGame(story, userName);
+        if (returnValue == 1)
+            return 1;
     bk2:
         printf("\n\tWhat do You Do?\n\n");
         printf("\t  1. - Take a train to delay some time\n");
@@ -114,11 +102,9 @@ bk1:
         case 1:
         md3:
             strcpy(player.mode, "md3");
-            continueGame(story, userName);
-            printf("num = %d\n", player.nameLength);
-            printf("str1 = %s\n", player.name);
-            printf("str2 = %s\n", player.mode);
-            printf("num2 = %d\n", player.checkpoint);
+            returnValue = continueGame(story, userName);
+            if (returnValue == 1)
+                return 1;
         bk3:
             printf("\n\tWhat do You Do?\n\n");
             printf("\t  1. - Do nothing\n");
@@ -129,11 +115,9 @@ bk1:
             case 1:
             md4:
                 strcpy(player.mode, "md4");
-                continueGame(story, userName);
-                printf("num = %d\n", player.nameLength);
-                printf("str1 = %s\n", player.name);
-                printf("str2 = %s\n", player.mode);
-                printf("num2 = %d\n", player.checkpoint);
+                returnValue = continueGame(story, userName);
+                if (returnValue == 1)
+                    return 1;
             bk4:
                 printf("\n\tWhat do You Do?\n\n");
                 printf("\t  1. - Do nothing\n");
@@ -144,11 +128,9 @@ bk1:
                 case 1:
                 md5:
                     strcpy(player.mode, "md5");
-                    continueGame(story, userName);
-                    printf("num = %d\n", player.nameLength);
-                    printf("str1 = %s\n", player.name);
-                    printf("str2 = %s\n", player.mode);
-                    printf("num2 = %d\n", player.checkpoint);
+                    returnValue = continueGame(story, userName);
+                    if (returnValue == 1)
+                        return 1;
                     break;
                 case 2:
                     strcpy(player.mode, "alt4");
@@ -156,10 +138,9 @@ bk1:
                     fclose(story);
                     FILE *altstory = fopen("altstory.txt", "r");
                     fseek(altstory, alt3, SEEK_SET);
-                    continueGame(altstory, userName);
-                    printf("str1 = %s\n", player.name);
-                    printf("str2 = %s\n", player.mode);
-                    printf("num2 = %d\n", player.checkpoint);
+                    returnValue = continueGame(altstory, userName);
+                    if (returnValue == 1)
+                        return 1;
                     fclose(altstory);
                 default:
                     printf("Invalid Input.\tPlease try again\n");
@@ -172,17 +153,15 @@ bk1:
                 fclose(story);
                 FILE *altstory = fopen("altstory.txt", "r");
                 fseek(altstory, alt2, SEEK_SET);
-                continueGame(altstory, userName);
-                printf("str1 = %s\n", player.name);
-                printf("str2 = %s\n", player.mode);
-                printf("num2 = %d\n", player.checkpoint);
+                returnValue = continueGame(altstory, userName);
+                if (returnValue == 1)
+                    return 1;
                 fclose(altstory);
                 break;
             default:
                 printf("Invalid Input.\tPlease try again\n");
                 goto bk3;
             }
-
             break;
         case 2:
         alt2:
@@ -190,10 +169,9 @@ bk1:
             fclose(story);
             FILE *altstory = fopen("altstory.txt", "r");
             fseek(altstory, alt1, SEEK_SET);
-            continueGame(altstory, userName);
-            printf("str1 = %s\n", player.name);
-            printf("str2 = %s\n", player.mode);
-            printf("num2 = %d\n", player.checkpoint);
+            returnValue = continueGame(altstory, userName);
+            if (returnValue == 1)
+                return 1;
             fclose(altstory);
             break;
         default:
@@ -208,11 +186,9 @@ bk1:
         fclose(story);
         FILE *altstory = fopen("altstory.txt", "r");
         fseek(altstory, alt0, SEEK_SET);
-        continueGame(altstory, userName);
-
-        printf("str1 = %s\n", player.name);
-        printf("str2 = %s\n", player.mode);
-        printf("num2 = %d\n", player.checkpoint);
+        returnValue = continueGame(altstory, userName);
+        if (returnValue == 1)
+            return 1;
         fclose(altstory);
     }
     else
@@ -221,8 +197,18 @@ bk1:
         goto bk1;
     }
     fclose(story);
-
-    //return 0;
+    int decision = 0;
+    printf("\nYou've reached the end of the Game\nWhat would you like to do Next?\n\n");
+    printf("1 - Go to Menu\n\n2 - Restart Game\n\n3 - Quit\n\n");
+    scanf("%d", &decision);
+    if (decision == 1)
+        return 1;
+    else if (decision == 2)
+    { 
+        gameReset(userName);
+        goto reset;
+    }
+    return 0;
 }
 
 int stringPrint(char *string, FILE *story, char *userName)
@@ -237,40 +223,32 @@ int stringPrint(char *string, FILE *story, char *userName)
         }
         else if (string[i] == '$')
         {
-            printf("\n\n\t\t\t\t\t\t**Press Enter to Continue**");
+            printf("\n\n\t\t\t\t\t\t**Press Enter to Continue**\n");
             scanf("%c", &save);
-            player.checkpoint = ftell(story);
-           // printf("\n%d\n", player.checkpoint);
-            
-            //printf("\n0%c0\n", save);
             if (save == 's')
             {
                 saveProgress(userName);
-                contOrQuit();
-                //printf("\n0%c0\n", save);
+            }else if( save == 'm')
+            {
+                returnVal = contOrQuit();
             }
-        }else if(string[i] == '#')
-        {
-            
-            printf("\n0add0\n");
+            player.checkpoint = ftell(story);
         }
         else
         {
             printf("%c", string[i]);
         }
         Sleep(4);
-        // cursor++;
     }
-    /** if (returnVal == 1)
-     {
-         return 2;
-     }*/
+    if (returnVal == 1)
+    {
+        return 2;
+    }
     return 0;
 }
-void continueGame(FILE *story, char *userName)
+int continueGame(FILE *story, char *userName)
 {
     int returnValue;
-
     char buffer[100];
 
     while (fgets(buffer, 100, story) != NULL)
@@ -278,40 +256,29 @@ void continueGame(FILE *story, char *userName)
         returnValue = stringPrint(buffer, story, userName);
         if (returnValue == 1)
         {
-            break;
+            return 0;
         }
+        else if (returnValue == 2)
+            return 1;
         else
         {
             continue;
         }
-        player.checkpoint = ftell(story);
     }
-
-    // printf("\n&%ld&\n", ftell(story)); pass it to the player struct
 }
 void progressLoad(char *userName)
 {
-
     char fileName[100] = "";
     char *buffer;
-    // int i = 0;
-
-    // char playerInfo[20] ={"nameLength", "name", "mode", "checkpoint"};
+   
     strcpy(fileName, userName);
-    // printf("%sA\n", userName);
     strcat(fileName, ".txt");
-    // printf("%sB\n", fileName);
     FILE *userProfile = fopen(fileName, "r");
-    //fseek(userProfile, 0, SEEK_SET);
     if (!feof(userProfile) && !ferror(userProfile))
     {
-        printf("%dA\n", ftell(userProfile));
-        // fscanf(userProfile, "%d", &player.nameLength);
         fscanf(userProfile, "%s", player.name);
         fscanf(userProfile, "%s", player.mode);
         fscanf(userProfile, "%d", &player.checkpoint);
-
-        // printf("%dd\n", ftell(userProfile));
     }
     fclose(userProfile);
 }
@@ -334,26 +301,51 @@ int saveProgress(char *userName)
         printf("Failed to write data to file.\n");
         fclose(userProfile);
         return -1;
+    }else
+    {
+        printf("\nProgress Saved\n\n");
     }
-    // printf("%dd\n", ftell(userProfile));
-
     fclose(userProfile);
     return 0;
 }
-void contOrQuit()
+int contOrQuit()
 {
     int choice = 0;
 re:
-    printf("Would you like to \n1 - continue \nor \n2 - quit\n");
+    printf("Would you like to \n1 - MainMenu \n\n2 - Continue \n\n3 - Quit\n");
     scanf("%d", &choice);
     if (choice == 1)
-        return;
-    else if (choice == 2)
+        return 1;
+    else if (choice == 3)
         exit(1);
+    else if (choice == 2)
+        return 0;
     else
     {
         fflush(stdin);
         printf("Invalid Choice\nRetry\n");
         goto re;
     }
+    return 0;
+}
+void gameReset(char *userName)
+{
+    char fileName[100] = "";
+    strcpy(fileName, userName);
+    strcat(fileName, ".txt");
+    FILE *userProfile = fopen(fileName, "w");
+    if (userProfile == NULL)
+    {
+        printf("Could not open file for writing.\n");
+        return;
+    }
+
+    int result = fprintf(userProfile, "%s\n%s\n%d\n", player.name, "new", 0);
+    if (result < 0)
+    {
+        printf("Failed to write data to file.\n");
+        fclose(userProfile);
+        return;
+    }
+    fclose(userProfile);
 }

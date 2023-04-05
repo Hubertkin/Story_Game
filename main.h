@@ -5,6 +5,6 @@
 #include <string.h>
 #include <string.h>
 #include <windows.h>
-void storyGame(char *);
+int storyGame(char *);
 
 #endif

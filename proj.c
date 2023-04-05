@@ -1,12 +1,5 @@
 #include "main.h"
 
-struct gamePlayer
-{
-    char *name;
-    char *playerFile;
-    int checkpoint;
-} player;
-
 void lineNum();
 int checkUser(char *);
 int stringChecker(int);
@@ -17,10 +10,11 @@ int main()
     int numRead = 0;
     int playerOpt;
     static int errorNum = 0;
-    printf("Hello there\nWelcome to Chapters Story Game\n");
+    int returnValue = 0;
+    printf("\n\nHello there\n\nWelcome to Chapters Story Game\n");
 start:
     playerOpt = 0;
-    printf("Select an option\n1. New Player\n2. Load Saved Player profile\n");
+    printf("\nSelect an option\n\n1. New Player\n\n2. Load Saved Player profile\n\n3. Quit\n\n");
     numRead = scanf("%d", &playerOpt);
     if (numRead != 1)
     {
@@ -39,46 +33,40 @@ start:
 
             char userName[100] = "";
             char fileName[100] = "";
-            char userName1[100] ="";
-            printf("Enter a username to create your profile\n");
+            char userName1[100] = "";
+            printf("Enter a username to create your profile\n\n");
             scanf(" %[^\n]", userName);
             strcpy(fileName, userName);
             strcpy(userName1, userName);
             strcat(fileName, ".txt");
             FILE *userProfile = fopen(fileName, "a");
             FILE *players = fopen("players.txt", "a");
-
-            // printf("%s", fileName);
             
-
             if (userProfile != NULL)
             {
                 if (checkUser(userName1))
                 {
-                    printf("The username already exixts\nUse a new username or load the existing profile\n");
+                    printf("The username already exixts\nUse a new username or load the existing profile\n\n");
                     goto start;
                 }
                 else
                 {
-                    printf("Welcome once again %s\nYour profile has been successfully created\n", userName);
-                    /**if (strlen(userName) > 9)
-                        fprintf(userProfile, "%d\n", strlen(userName) + 2);
-                    else if(strlen(userName) > 99)
-                        fprintf(userProfile, "%d\n", strlen(userName) + 3);
-                    else
-                        fprintf(userProfile, "%d\n", strlen(userName) + 1);*/
+                    printf("Welcome once again %s\n\nYour profile has been successfully created\n\n", userName);
                     fprintf(userProfile, "%s\n", userName);
                     fprintf(players, "%s\n", userName);
                     fclose(players);
                     fclose(userProfile);
                     lineNum();
-                    storyGame(userName);
-                    goto start;
+                    returnValue = storyGame(userName);
+                    if (returnValue == 1)
+                    {
+                        goto start;
+                    }
                 }
             }
             else
             {
-                printf("There was an error, please try again\n");
+                printf("There was an error, please try again\n\n");
                 goto start;
             }
         }
@@ -108,29 +96,34 @@ start:
             work = scanf("%d", &choice);
             if (choice != 0 && choice != -1)
             {
-                // printf("1\n");
                 strcpy(fileName, conCat[(choice - 1)]);
                 fileName[strlen(fileName) - 1] = '\0';
                 strcat(fileName, ".txt");
                 FILE *login = fopen(fileName, "r");
                 char buffer[20] = "";
-                // printf("%s2\n", fileName);
-                // printf("%d3\n", ferror(login));
                 fseek(login, 0, SEEK_SET);
                 fgets(buffer, 20, login);
                 printf("\n%s\n", buffer);
                 buffer[strlen(buffer) - 1] = '\0';
-                storyGame(buffer);
-                // printf("%s5\n", conCat[choice - 1]);
+                returnValue = storyGame(buffer);
+                if (returnValue == 1)
+                {
+                    goto start;
+                }
             }
             else if (choice == 0)
             {
                 goto start;
             }
         }
+        else if (playerOpt == 3)
+        {
+            printf("Thank you for playing\n\n");
+            return 0;
+        }
         else
         {
-            printf("Invalid input, try again\n");
+            printf("Invalid input, try again\n\n");
             goto start;
         }
         return 0;
@@ -142,40 +135,31 @@ void lineNum()
     char buffer[50];
     FILE *checker = fopen("checker.txt", "w");
     FILE *orginalFile = fopen("players.txt", "r");
-    // FILE *newFile = fopen("playersNewFile.txt", "w");
     int currentLine = 1;
 
     while (fgets(buffer, 50, orginalFile))
     {
-        // fprintf(newFile, "%d %s", currentLine, buffer);
         strcpy(buffer, strlwr(buffer));
         fprintf(checker, "%s", buffer);
-        // printf("%s", buffer);
         currentLine++;
     }
     fclose(orginalFile);
-    // fclose(newFile);
     fclose(checker);
 }
 int checkUser(char *userName)
 {
     char temp[512];
     int counter = 0;
-    //char userN[100];
-    // printf("1-%s\n", userName);
     strcpy(userName, strlwr(userName));
-    // printf("2-%s\n", userName);
     FILE *checker = fopen("checker.txt", "r");
     while (fgets(temp, 512, checker) != NULL)
     {
         if ((strstr(temp, userName)) != NULL)
         {
-            // printf("3-%s\n", userName);
             ++counter;
         }
         else
         {
-            // printf("4-%s\n", userName);
             continue;
         }
     }
@@ -196,5 +180,3 @@ int stringChecker(int errorNum)
     }
     return 0;
 }
-
-// void typeS(char* string)
