@@ -102,7 +102,7 @@ start:
                 FILE *login = fopen(fileName, "r");
                 char buffer[20] = "";
                 fseek(login, 0, SEEK_SET);
-                fgets(buffer, 20, login);
+                fgets(bulffer, 20, login);
                 printf("\n%s\n", buffer);
                 buffer[strlen(buffer) - 1] = '\0';
                 returnValue = storyGame(buffer);
