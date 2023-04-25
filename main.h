@@ -6,5 +6,6 @@
 #include <string.h>
 #include <windows.h>
 int storyGame(char *);
+void printTitle();
 
 #endif
